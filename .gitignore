@@ -1,0 +1,72 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# If your settings.py uses a secret key file
+secret_key.txt
+
+# Environment variables
+.env
+.env.*
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+*.iml
+
+# Migrations
+**/migrations/*.py
+!**/migrations/__init__.py
+
+# Coverage reports
+htmlcov/
+.coverage
+.tox/
+.nox/
+.cache/
+pytest_cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# pip-tools
+*.txt~  # backup files
+
+# Docker
+*.pid
+*.seed
+
+# macOS
+.DS_Store
+
+# Nginx / Gunicorn
+*.sock
+
+# JetBrains IDEs
+.idea/
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini

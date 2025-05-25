@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Объявления - Платформа обмена{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>Поиск и фильтры</h5>
+            </div>
+            <div class="card-body">
+                <form method="get">
+                    {{ search_form.as_p }}
+                    <button type="submit" class="btn btn-primary">Найти</button>
+                    <a href="{% url 'ad_list' %}" class="btn btn-secondary">Сбросить</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Объявления</h2>
+            {% if user.is_authenticated %}
+                <a href="{% url 'ad_create' %}" class="btn btn-success">Добавить объявление</a>
+            {% endif %}
+        </div>
+
+        {% if ads %}
+            <div class="row">
+                {% for ad in ads %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100">
+                            {% if ad.image_url %}
+                                <img src="{{ ad.image_url.url }}" class="card-img-top" alt="{{ ad.title }}" style="height: 200px; object-fit: cover;">
+                            {% endif %}
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">{{ ad.title }}</h5>
+                                <p class="card-text">{{ ad.description|truncatewords:20 }}</p>
+                                <div class="mb-2">
+                                    <span class="badge bg-primary badge-category">{{ ad.get_category_display }}</span>
+                                    <span class="badge bg-secondary">{{ ad.get_condition_display }}</span>
+                                </div>
+                                <div class="card-footer bg-transparent mt-auto">
+                                    <small class="text-muted">
+                                        От {{ ad.user.username }} • {{ ad.created_at|date:"d.m.Y" }}
+                                    </small>
+                                    <div class="mt-2">
+                                        <a href="{% url 'ad_detail' ad.pk %}" class="btn btn-outline-primary btn-sm">Подробнее</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if page_obj.has_other_pages %}
+                <nav aria-label="Навигация по страницам">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{% if search_form.query.value %}query={{ search_form.query.value }}&{% endif %}{% if search_form.category.value %}category={{ search_form.category.value }}&{% endif %}{% if search_form.condition.value %}condition={{ search_form.condition.value }}&{% endif %}page={{ page_obj.previous_page_number }}">Предыдущая</a>
+                            </li>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?{% if search_form.query.value %}query={{ search_form.query.value }}&{% endif %}{% if search_form.category.value %}category={{ search_form.category.value }}&{% endif %}{% if search_form.condition.value %}condition={{ search_form.condition.value }}&{% endif %}page={{ num }}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{% if search_form.query.value %}query={{ search_form.query.value }}&{% endif %}{% if search_form.category.value %}category={{ search_form.category.value }}&{% endif %}{% if search_form.condition.value %}condition={{ search_form.condition.value }}&{% endif %}page={{ page_obj.next_page_number }}">Следующая</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-info">
+                <h4>Объявления не найдены</h4>
+                <p>Попробуйте изменить параметры поиска или <a href="{% url 'ad_create' %}">создайте первое объявление</a>.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

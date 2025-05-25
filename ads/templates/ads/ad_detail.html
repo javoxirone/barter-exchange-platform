@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ ad.title }} - Платформа обмена{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            {% if ad.image_url %}
+                <img src="{{ ad.image_url.url }}" class="card-img-top" alt="{{ ad.title }}" style="max-height: 400px; object-fit: cover;">
+            {% endif %}
+            <div class="card-body">
+                <h1 class="card-title">{{ ad.title }}</h1>
+                <div class="mb-3">
+                    <span class="badge bg-primary fs-6 me-2">{{ ad.get_category_display }}</span>
+                    <span class="badge bg-secondary fs-6">{{ ad.get_condition_display }}</span>
+                </div>
+                <p class="card-text">{{ ad.description|linebreaks }}</p>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong>Автор: {{ ad.user.username }}</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong>Дата публикации:</strong> {{ ad.created_at|date:"d.m.Y H:i" }}
+                    </div>
+                </div>
+
+                {% if is_owner %}
+                    <hr>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'ad_update' ad.pk %}" class="btn btn-warning">Редактировать</a>
+                        <a href="{% url 'ad_delete' ad.pk %}" class="btn btn-danger">Удалить</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        {% if user.is_authenticated and not is_owner and user_ads %}
+            <div class="card">
+                <div class="card-header">
+                    <h5>Предложить обмен</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'propose_exchange' ad.pk %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="sender_ad" class="form-label">Выберите ваше объявление для обмена:</label>
+                            <select name="sender_ad" id="sender_ad" class="form-select" required>
+                                <option value="">-- Выберите объявление --</option>
+                                {% for user_ad in user_ads %}
+                                    <option value="{{ user_ad.pk }}">{{ user_ad.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {{ proposal_form.as_p }}
+                        <button type="submit" class="btn btn-primary">Предложить обмен</button>
+                    </form>
+                </div>
+            </div>
+        {% elif user.is_authenticated and not is_owner and not user_ads %}
+            <div class="alert alert-info">
+                <h6>Хотите предложить обмен?</h6>
+                <p>У вас пока нет объявлений для обмена.</p>
+                <a href="{% url 'ad_create' %}" class="btn btn-primary btn-sm">Создать объявление</a>
+            </div>
+        {% elif not user.is_authenticated %}
+            <div class="alert alert-warning">
+                <h6>Войдите в систему</h6>
+                <p>Чтобы предложить обмен, необходимо <a href="{% url 'login' %}">войти в систему</a> или <a href="{% url 'register' %}">зарегистрироваться</a>.</p>
+            </div>
+        {% endif %}
+
+        <div class="card">
+            <div class="card-header">
+                <h6>Информация</h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li><strong>Категория:</strong> {{ ad.get_category_display }}</li>
+                    <li><strong>Состояние:</strong> {{ ad.get_condition_display }}</li>
+                    <li><strong>Опубликовано:</strong> {{ ad.created_at|date:"d.m.Y" }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{% url 'ad_list' %}" class="btn btn-secondary">← Назад к объявлениям</a>
+</div>
+{% endblock %}
