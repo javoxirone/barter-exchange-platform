@@ -7,7 +7,7 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('register/', views.register, name='register'),
 
-    path('ads/', views.ad_list, name='ad_list'),
+    path('', views.ad_list, name='ad_list'),
     path('ads/<int:pk>/', views.ad_detail, name='ad_detail'),
     path('ads/new/', views.ad_create, name='ad_create'),
     path('ads/<int:pk>/edit/', views.ad_update, name='ad_update'),

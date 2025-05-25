@@ -76,7 +76,7 @@ def ad_list(request):
     if condition:
         queryset = queryset.filter(condition=condition)
 
-    if is_mine:
+    if is_mine and request.user.is_authenticated:
         queryset = queryset.filter(user=request.user)
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')

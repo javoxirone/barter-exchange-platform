@@ -10,11 +10,11 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'ad_list' %}">Главная</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'ad_list' %}">Все объявления</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="https://github.com/javoxirone/text-analyzer" target="_blank">Проект в
+                        <a class="nav-link" href="https://github.com/javoxirone/barter-exchange-platform" target="_blank">Проект в
                             GitHub <i class="bi bi-box-arrow-up-right"></i></a>
                     </li>
                 </ul>
@@ -26,6 +26,7 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'ad_list' %}?is_mine=on">Мои объявления</a></li>
+                            <li><a class="dropdown-item" href="{% url 'my_proposals' %}">Мои предложения обмена</a></li>
                             <li><a class="dropdown-item" href="{% url 'logout' %}">Выйти</a></li>
                         </ul>
                     </div>
